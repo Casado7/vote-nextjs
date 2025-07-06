@@ -1,4 +1,21 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# vote-nextjs
+
+Proyecto Next.js en JavaScript con conexión a base de datos Postgres (Neon) y Prisma como ORM.
+
+## Scripts principales
+
+- `npm run dev` — Inicia el servidor de desarrollo
+- `npm run build` — Compila la aplicación para producción
+- `npm run start` — Inicia la app en modo producción
+
+## Siguientes pasos
+1. Configurar Prisma y la conexión a Neon.
+2. Crear el esquema de la base de datos en `prisma/schema.prisma`.
+3. Ejecutar migraciones y generar el cliente Prisma.
+
+---
+
+Este README se actualizará conforme avance el desarrollo.
 
 ## Getting Started
 
