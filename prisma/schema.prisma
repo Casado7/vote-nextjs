@@ -13,3 +13,47 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  nombre       String   @db.VarChar(100)
+  username     String   @unique @db.VarChar(50)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  rol          String   @db.VarChar(20)
+  foodOptions  FoodOption[] @relation("FoodOptionCreator")
+  votes        Vote[]
+  comentarios  Comentario[]
+}
+
+model FoodOption {
+  id          String   @id @default(uuid()) @db.VarChar(36)
+  nombre      String   @db.VarChar(100)
+  descripcion String?  @db.Text
+  precio      Decimal  @db.Decimal(10,2)
+  delivery    Boolean
+  ubicacion   String   @db.VarChar(200)
+  creador     User     @relation("FoodOptionCreator", fields: [creadorId], references: [id])
+  creadorId   String   @db.VarChar(36)
+  votes       Vote[]
+  comentarios Comentario[]
+}
+
+model Vote {
+  usuario   User       @relation(fields: [usuarioId], references: [id])
+  usuarioId String     @db.VarChar(36)
+  comida    FoodOption @relation(fields: [comidaId], references: [id])
+  comidaId  String     @db.VarChar(36)
+  puntuacion Int
+  fecha     DateTime   @default(now())
+  @@id([usuarioId, comidaId])
+}
+
+model Comentario {
+  id        String     @id @default(uuid()) @db.VarChar(36)
+  usuario   User       @relation(fields: [usuarioId], references: [id])
+  usuarioId String     @db.VarChar(36)
+  comida    FoodOption @relation(fields: [comidaId], references: [id])
+  comidaId  String     @db.VarChar(36)
+  texto     String     @db.Text
+  fecha     DateTime   @default(now())
+}
