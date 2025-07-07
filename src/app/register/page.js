@@ -4,13 +4,22 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 export default function RegisterForm() {
-  const [form, setForm] = useState({ nombre: "", username: "", password: "" });
+  const [form, setForm] = useState({ nombre: "", username: "", password: "", imagen: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value, files } = e.target;
+    if (name === "imagen" && files && files[0]) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm((prev) => ({ ...prev, imagen: reader.result }));
+      };
+      reader.readAsDataURL(files[0]);
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -35,6 +44,8 @@ export default function RegisterForm() {
       <Input name="nombre" placeholder="Nombre" value={form.nombre} onChange={handleChange} required />
       <Input name="username" placeholder="Usuario" value={form.username} onChange={handleChange} required />
       <Input name="password" type="password" placeholder="Contraseña" value={form.password} onChange={handleChange} required />
+      <Input name="imagen" type="file" accept="image/*" onChange={handleChange} />
+      {form.imagen && <img src={form.imagen} alt="preview" className="w-20 h-20 rounded-full mx-auto" />}
       <Button type="submit" className="w-full" disabled={loading}>{loading ? "Registrando..." : "Registrarse"}</Button>
       {error && <div className="text-red-500 text-sm text-center">{error}</div>}
       {success && <div className="text-green-600 text-sm text-center">{success}</div>}
