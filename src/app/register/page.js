@@ -2,12 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const [form, setForm] = useState({ nombre: "", username: "", password: "", imagen: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -34,7 +36,10 @@ export default function RegisterForm() {
     });
     const data = await res.json();
     if (!res.ok) setError(data.error || "Error");
-    else setSuccess("Usuario registrado correctamente");
+    else {
+      setSuccess("Usuario registrado correctamente");
+      setTimeout(() => router.push("/login"), 1200);
+    }
     setLoading(false);
   };
 
