@@ -19,8 +19,9 @@ export async function POST(request) {
     if (!valid) {
       return NextResponse.json({ error: 'Contraseña incorrecta.' }, { status: 401 });
     }
-    const token = jwt.sign({ id: user.id, username: user.username, rol: user.rol }, JWT_SECRET, { expiresIn: '7d' });
-    return NextResponse.json({ token, user: { id: user.id, nombre: user.nombre, username: user.username, rol: user.rol } });
+    // Incluir la imagen en el payload del JWT
+    const token = jwt.sign({ id: user.id, username: user.username, rol: user.rol, nombre: user.nombre, imagen: user.imagen }, JWT_SECRET, { expiresIn: '7d' });
+    return NextResponse.json({ token, user: { id: user.id, nombre: user.nombre, username: user.username, rol: user.rol, imagen: user.imagen } });
   } catch (error) {
     return NextResponse.json({ error: 'Error al iniciar sesión.' }, { status: 500 });
   }
