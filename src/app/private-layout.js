@@ -30,13 +30,14 @@ export default function PrivateLayout({ children }) {
           <a href="/usuarios" className="font-medium hover:underline underline-offset-4">Usuarios</a>
         </nav>
         {/* Usuario y dropdown */}
-        {user && (
-          <div className="relative">
-            <button
-              className="flex items-center gap-2 focus:outline-none"
-              onClick={() => setDropdown((d) => !d)}
-            >
-              {user.imagen ? (
+        <div className="relative min-w-[160px] flex items-center justify-end">
+          <button
+            className="flex items-center gap-2 focus:outline-none"
+            onClick={() => setDropdown((d) => !d)}
+            disabled={!user}
+          >
+            {user ? (
+              user.imagen ? (
                 <img
                   src={user.imagen}
                   alt="avatar"
@@ -46,18 +47,22 @@ export default function PrivateLayout({ children }) {
                 <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold">
                   {user?.nombre?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase()}
                 </div>
-              )}
-              <span className="font-medium">{user?.nombre || user?.username}</span>
-            </button>
-            {dropdown && (
-              <div className="absolute right-0 mt-2 w-40 bg-popover border rounded shadow z-10">
-                <Button className="w-full justify-start" variant="ghost" onClick={handleLogout}>
-                  Cerrar sesión
-                </Button>
-              </div>
+              )
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
             )}
-          </div>
-        )}
+            <span className="font-medium">
+              {user ? (user.nombre || user.username) : <span className="bg-muted rounded w-20 h-4 inline-block animate-pulse" />}
+            </span>
+          </button>
+          {user && dropdown && (
+            <div className="absolute right-0 mt-2 w-40 bg-popover border rounded shadow z-10">
+              <Button className="w-full justify-start" variant="ghost" onClick={handleLogout}>
+                Cerrar sesión
+              </Button>
+            </div>
+          )}
+        </div>
       </header>
       <main>
         {(!user && typeof window !== "undefined" && localStorage.getItem("token")) ? (
