@@ -19,6 +19,7 @@ model User {
   username     String   @unique @db.VarChar(50)
   passwordHash String   @map("password_hash") @db.VarChar(255)
   rol          String   @db.VarChar(20)
+  imagen       String?  @db.Text
   foodOptions  FoodOption[] @relation("FoodOptionCreator")
   votes        Vote[]
   comentarios  Comentario[]
