@@ -36,7 +36,13 @@ export default function PrivateLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="flex justify-end items-center p-4">
+      <header className="flex items-center justify-between p-4 border-b border-border">
+        {/* Barra de navegación */}
+        <nav className="flex gap-4">
+          <a href="/dashboard" className="font-medium hover:underline underline-offset-4">Inicio</a>
+          <a href="/usuarios" className="font-medium hover:underline underline-offset-4">Usuarios</a>
+        </nav>
+        {/* Usuario y dropdown */}
         {user && (
           <div className="relative">
             <button
