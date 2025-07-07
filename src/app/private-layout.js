@@ -31,7 +31,7 @@ export default function PrivateLayout({ children }) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    router.replace("/login");
+    router.replace("/"); // Redirige a la página principal
   };
 
   return (
