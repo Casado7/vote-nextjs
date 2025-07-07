@@ -2,36 +2,23 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-
-function getUserFromToken() {
-  if (typeof window === "undefined") return null;
-  const token = localStorage.getItem("token");
-  if (!token) return null;
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload;
-  } catch {
-    return null;
-  }
-}
+import { useUser } from "../context/user-context";
 
 export default function PrivateLayout({ children }) {
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useUser();
   const [dropdown, setDropdown] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
       router.replace("/login");
-    } else {
-      setUser(getUserFromToken());
     }
   }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    router.replace("/"); // Redirige a la página principal
+    setUser(null);
+    router.replace("/");
   };
 
   return (
@@ -57,10 +44,10 @@ export default function PrivateLayout({ children }) {
                 />
               ) : (
                 <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold">
-                  {user.nombre?.[0]?.toUpperCase() || user.username?.[0]?.toUpperCase()}
+                  {user?.nombre?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase()}
                 </div>
               )}
-              <span className="font-medium">{user.nombre || user.username}</span>
+              <span className="font-medium">{user?.nombre || user?.username}</span>
             </button>
             {dropdown && (
               <div className="absolute right-0 mt-2 w-40 bg-popover border rounded shadow z-10">
@@ -72,7 +59,15 @@ export default function PrivateLayout({ children }) {
           </div>
         )}
       </header>
-      <main>{children}</main>
+      <main>
+        {(!user && typeof window !== "undefined" && localStorage.getItem("token")) ? (
+          <div className="flex items-center justify-center min-h-[40vh]">
+            <div className="animate-pulse text-lg">Cargando...</div>
+          </div>
+        ) : (
+          children
+        )}
+      </main>
     </div>
   );
 }
