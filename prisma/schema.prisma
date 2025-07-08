@@ -32,6 +32,7 @@ model FoodOption {
   precio      Decimal  @db.Decimal(10,2)
   delivery    Boolean
   ubicacion   String   @db.VarChar(200)
+  imagen      String?  @db.Text // Imagen en base64, igual que en User
   creador     User     @relation("FoodOptionCreator", fields: [creadorId], references: [id])
   creadorId   String   @db.VarChar(36)
   votes       Vote[]
