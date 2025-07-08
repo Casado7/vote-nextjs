@@ -1,9 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import ModalNuevaOpcion from "./ModalNuevaOpcion";
+import { Button } from "@/components/ui/button";
 
 export default function OpcionesPage() {
   const [opciones, setOpciones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     fetch("/api/opciones")
@@ -14,9 +17,21 @@ export default function OpcionesPage() {
       });
   }, []);
 
+  const handleCreated = (nueva) => {
+    setOpciones((prev) => [nueva, ...prev]);
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Opciones de comida</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Opciones de comida</h1>
+        <ModalNuevaOpcion
+          open={modal}
+          onClose={() => setModal(false)}
+          onCreated={handleCreated}
+          trigger={<Button onClick={() => setModal(true)}>+ Nueva opción</Button>}
+        />
+      </div>
       {loading ? (
         <div className="animate-pulse text-lg">Cargando...</div>
       ) : opciones.length === 0 ? (
