@@ -4,14 +4,25 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const url = request?.url || "";
+    const conVotos = url.includes("conVotos=1");
     const opciones = await prisma.foodOption.findMany({
       include: {
         creador: { select: { id: true, nombre: true, username: true, imagen: true } },
+        ...(conVotos ? { votes: true } : {}),
       },
       orderBy: { nombre: 'asc' },
     });
+    if (conVotos) {
+      // Calcular promedio y total de votos
+      opciones.forEach(op => {
+        op.totalVotos = op.votes.length;
+        op.promedio = op.votes.length ? op.votes.reduce((a, v) => a + v.puntuacion, 0) / op.votes.length : 0;
+        delete op.votes;
+      });
+    }
     return NextResponse.json({ opciones });
   } catch (error) {
     return NextResponse.json({ error: 'Error al obtener opciones.' }, { status: 500 });

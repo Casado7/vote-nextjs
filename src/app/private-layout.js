@@ -35,6 +35,7 @@ export default function PrivateLayout({ children }) {
           <a href="/dashboard" className="font-medium hover:underline underline-offset-4">Inicio</a>
           <a href="/usuarios" className="font-medium hover:underline underline-offset-4">Usuarios</a>
           <a href="/opciones" className="font-medium hover:underline underline-offset-4">Opciones</a>
+          <a href="/resultados" className="font-medium hover:underline underline-offset-4">Resultados</a>
         </nav>
         {/* Usuario y dropdown */}
         <div className="relative min-w-[160px] flex items-center justify-end">
