@@ -2,11 +2,15 @@
 import { useEffect, useState } from "react";
 import ModalNuevaOpcion from "./ModalNuevaOpcion";
 import { Button } from "@/components/ui/button";
+import { useUser } from "../../context/user-context";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function OpcionesPage() {
   const [opciones, setOpciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const { user } = useUser();
 
   useEffect(() => {
     fetch("/api/opciones")
@@ -19,6 +23,18 @@ export default function OpcionesPage() {
 
   const handleCreated = (nueva) => {
     setOpciones((prev) => [nueva, ...prev]);
+  };
+
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`/api/opciones/${id}`, {
+      method: "DELETE",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (res.ok) {
+      setOpciones((prev) => prev.filter((op) => op.id !== id));
+    }
+    setDeleteId(null);
   };
 
   return (
@@ -39,7 +55,27 @@ export default function OpcionesPage() {
       ) : (
         <ul className="space-y-4">
           {opciones.map((op) => (
-            <li key={op.id} className="flex items-center gap-4 p-4 border rounded-lg bg-card">
+            <li key={op.id} className="relative flex items-center gap-4 p-4 border rounded-lg bg-card">
+              {user?.id === op.creador?.id && (
+                <Dialog open={deleteId === op.id} onOpenChange={v => setDeleteId(v ? op.id : null)}>
+                  <DialogTrigger asChild>
+                    <button className="absolute top-2 right-2 text-destructive hover:bg-destructive/10 rounded-full p-1" title="Eliminar opción">
+                      <span className="sr-only">Eliminar</span>
+                      <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>¿Eliminar opción?</DialogTitle>
+                      <DialogDescription>Esta acción no se puede deshacer. ¿Seguro que deseas eliminar esta opción?</DialogDescription>
+                    </DialogHeader>
+                    <div className="flex gap-2 justify-end mt-4">
+                      <Button variant="ghost" onClick={() => setDeleteId(null)}>Cancelar</Button>
+                      <Button variant="destructive" onClick={() => handleDelete(op.id)}>Eliminar</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
               {op.imagen ? (
                 <img src={op.imagen} alt={op.nombre} className="w-16 h-16 rounded object-cover border" />
               ) : (
