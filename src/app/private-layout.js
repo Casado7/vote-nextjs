@@ -2,12 +2,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem
+} from "@/components/ui/dropdown-menu";
 import { useUser } from "../context/user-context";
 
 export default function PrivateLayout({ children }) {
   const router = useRouter();
   const { user, setUser } = useUser();
-  const [dropdown, setDropdown] = useState(false);
+  // const [dropdown, setDropdown] = useState(false); // Eliminado, ahora controlado por shadcn
 
   useEffect(() => {
     if (typeof window !== "undefined" && !localStorage.getItem("token")) {
@@ -32,37 +38,38 @@ export default function PrivateLayout({ children }) {
         </nav>
         {/* Usuario y dropdown */}
         <div className="relative min-w-[160px] flex items-center justify-end">
-          <button
-            className="flex items-center gap-2 focus:outline-none"
-            onClick={() => setDropdown((d) => !d)}
-            disabled={!user}
-          >
-            {user ? (
-              user.imagen ? (
-                <img
-                  src={user.imagen}
-                  alt="avatar"
-                  className="w-10 h-10 rounded-full border"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold">
-                  {user?.nombre?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase()}
-                </div>
-              )
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
-            )}
-            <span className="font-medium">
-              {user ? (user.nombre || user.username) : <span className="bg-muted rounded w-20 h-4 inline-block animate-pulse" />}
-            </span>
-          </button>
-          {user && dropdown && (
-            <div className="absolute right-0 mt-2 w-40 bg-popover border rounded shadow z-10">
-              <Button className="w-full justify-start" variant="ghost" onClick={handleLogout}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="flex items-center gap-2 focus:outline-none"
+                disabled={!user}
+              >
+                {user ? (
+                  user.imagen ? (
+                    <img
+                      src={user.imagen}
+                      alt="avatar"
+                      className="w-10 h-10 rounded-full border"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold">
+                      {user?.nombre?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase()}
+                    </div>
+                  )
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
+                )}
+                <span className="font-medium">
+                  {user ? (user.nombre || user.username) : <span className="bg-muted rounded w-20 h-4 inline-block animate-pulse" />}
+                </span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                 Cerrar sesión
-              </Button>
-            </div>
-          )}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
       <main>
