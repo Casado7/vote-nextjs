@@ -38,6 +38,11 @@ export async function POST(request) {
     if (!creadorId) {
       return NextResponse.json({ error: 'No autenticado.' }, { status: 401 });
     }
+    // Limitar a 3 opciones por usuario
+    const count = await prisma.foodOption.count({ where: { creadorId } });
+    if (count >= 3) {
+      return NextResponse.json({ error: 'Solo puedes crear hasta 3 opciones.' }, { status: 403 });
+    }
     const opcion = await prisma.foodOption.create({
       data: {
         nombre,
