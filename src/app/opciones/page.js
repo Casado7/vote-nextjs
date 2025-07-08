@@ -4,6 +4,7 @@ import ModalNuevaOpcion from "./ModalNuevaOpcion";
 import { Button } from "@/components/ui/button";
 import { useUser } from "../../context/user-context";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import Estrellas from "./Estrellas";
 
 export default function OpcionesPage() {
   const [opciones, setOpciones] = useState([]);
@@ -11,12 +12,30 @@ export default function OpcionesPage() {
   const [modal, setModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const { user } = useUser();
+  const [votos, setVotos] = useState({}); // { [opcionId]: puntuacion }
 
   useEffect(() => {
     fetch("/api/opciones")
       .then((res) => res.json())
-      .then((data) => {
+      .then(async (data) => {
         setOpciones(data.opciones || []);
+        // Obtener votos del usuario para cada opción
+        const token = localStorage.getItem("token");
+        if (token && data.opciones?.length) {
+          const votosObj = {};
+          await Promise.all(
+            data.opciones.map(async (op) => {
+              const res = await fetch(`/api/opciones/${op.id}/votar`, {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              if (res.ok) {
+                const { voto } = await res.json();
+                if (voto && voto.puntuacion) votosObj[op.id] = voto.puntuacion;
+              }
+            })
+          );
+          setVotos(votosObj);
+        }
         setLoading(false);
       });
   }, []);
@@ -35,6 +54,10 @@ export default function OpcionesPage() {
       setOpciones((prev) => prev.filter((op) => op.id !== id));
     }
     setDeleteId(null);
+  };
+
+  const handleVotar = (opcionId, puntuacion) => {
+    setVotos((prev) => ({ ...prev, [opcionId]: puntuacion }));
   };
 
   return (
@@ -88,6 +111,13 @@ export default function OpcionesPage() {
                 {op.descripcion && <div className="text-sm text-muted-foreground">{op.descripcion}</div>}
                 <div className="text-sm mt-1">Precio: <span className="font-medium">${op.precio}</span></div>
                 <div className="text-xs text-muted-foreground mt-1">Creador: {op.creador?.nombre || op.creador?.username}</div>
+                <div className="mt-2">
+                  <Estrellas
+                    opcionId={op.id}
+                    initial={votos[op.id] || 0}
+                    onVotar={(n) => handleVotar(op.id, n)}
+                  />
+                </div>
               </div>
             </li>
           ))}
