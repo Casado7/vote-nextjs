@@ -18,9 +18,13 @@ const UserContext = createContext({ user: null, setUser: () => {} });
 export function UserProvider({ children }) {
   const [user, setUser] = useState(() => {
     if (typeof window !== "undefined") {
-      // Intenta restaurar el usuario desde localStorage (persistencia instantánea)
       const stored = localStorage.getItem("_user");
-      if (stored) return JSON.parse(stored);
+      const img = localStorage.getItem("_user_img");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (img) parsed.imagen = img;
+        return parsed;
+      }
     }
     return null;
   });
@@ -28,12 +32,12 @@ export function UserProvider({ children }) {
   // Sincroniza el usuario con el token y persiste en localStorage
   useEffect(() => {
     const tokenUser = getUserFromToken();
-    // Si hay info de imagen en localStorage, combínala
     if (tokenUser && typeof window !== "undefined") {
       const img = localStorage.getItem("_user_img");
       if (img) tokenUser.imagen = img;
+      setUser(tokenUser);
     }
-    setUser(tokenUser);
+    // Si no hay tokenUser pero hay _user en localStorage, ya está en el estado inicial
   }, []);
 
   useEffect(() => {
