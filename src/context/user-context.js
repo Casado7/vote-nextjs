@@ -28,14 +28,27 @@ export function UserProvider({ children }) {
   // Sincroniza el usuario con el token y persiste en localStorage
   useEffect(() => {
     const tokenUser = getUserFromToken();
+    // Si hay info de imagen en localStorage, combínala
+    if (tokenUser && typeof window !== "undefined") {
+      const img = localStorage.getItem("_user_img");
+      if (img) tokenUser.imagen = img;
+    }
     setUser(tokenUser);
   }, []);
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem("_user", JSON.stringify(user));
+      // Guardar imagen aparte si existe
+      const { imagen, ...rest } = user;
+      localStorage.setItem("_user", JSON.stringify(rest));
+      if (imagen) {
+        localStorage.setItem("_user_img", imagen);
+      } else {
+        localStorage.removeItem("_user_img");
+      }
     } else {
       localStorage.removeItem("_user");
+      localStorage.removeItem("_user_img");
     }
   }, [user]);
 

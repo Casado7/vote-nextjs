@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "../../context/user-context";
 
 export default function LoginForm() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { setUser } = useUser();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,6 +29,13 @@ export default function LoginForm() {
     if (!res.ok) setError(data.error || "Error");
     else {
       localStorage.setItem("token", data.token);
+      // Guardar imagen aparte si viene en la respuesta
+      if (data.user && data.user.imagen) {
+        localStorage.setItem("_user_img", data.user.imagen);
+      } else {
+        localStorage.removeItem("_user_img");
+      }
+      setUser({ ...data.user });
       router.push("/dashboard");
     }
     setLoading(false);
