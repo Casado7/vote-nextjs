@@ -35,7 +35,6 @@ model FoodOption {
   id          String   @id @default(uuid()) @db.VarChar(36)
   nombre      String   @db.VarChar(100)
   descripcion String?  @db.Text
-  precio      Decimal  @db.Decimal(10,2)
   minPrice   Decimal  @db.Decimal(10,2)
   maxPrice    Decimal  @db.Decimal(10,2)
   delivery    Boolean
