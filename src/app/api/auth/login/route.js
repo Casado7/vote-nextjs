@@ -11,7 +11,10 @@ export async function POST(request) {
     if (!username || !password) {
       return NextResponse.json({ error: 'Usuario y contraseña requeridos.' }, { status: 400 });
     }
-    const user = await prisma.user.findUnique({ where: { username } });
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: { rol: true },
+    });
     if (!user) {
       return NextResponse.json({ error: 'Usuario no encontrado.' }, { status: 404 });
     }
@@ -20,8 +23,9 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Contraseña incorrecta.' }, { status: 401 });
     }
     // NO incluir la imagen en el payload del JWT
-    const token = jwt.sign({ id: user.id, username: user.username, rol: user.rol, nombre: user.nombre }, JWT_SECRET, { expiresIn: '7d' });
-    return NextResponse.json({ token, user: { id: user.id, nombre: user.nombre, username: user.username, rol: user.rol, imagen: user.imagen } });
+    const rol = user.rol ? { id: user.rol.id, nombre: user.rol.nombre } : null;
+    const token = jwt.sign({ id: user.id, username: user.username, rol, nombre: user.nombre }, JWT_SECRET, { expiresIn: '7d' });
+    return NextResponse.json({ token, user: { id: user.id, nombre: user.nombre, username: user.username, rol, imagen: user.imagen } });
   } catch (error) {
     return NextResponse.json({ error: 'Error al iniciar sesión.' }, { status: 500 });
   }
