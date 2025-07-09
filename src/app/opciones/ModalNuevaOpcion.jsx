@@ -1,5 +1,9 @@
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) {
@@ -59,14 +63,30 @@ export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) 
           <DialogDescription>Agrega una nueva opción de comida al sistema.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input className="w-full input input-bordered" required placeholder="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} />
-          <textarea className="w-full input input-bordered" placeholder="Descripción" value={descripcion} onChange={e => setDescripcion(e.target.value)} />
-          <input className="w-full input input-bordered" required type="number" min="0" step="0.01" placeholder="Precio" value={precio} onChange={e => setPrecio(e.target.value)} />
-          <input className="w-full input input-bordered" placeholder="Ubicación" value={ubicacion} onChange={e => setUbicacion(e.target.value)} />
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={delivery} onChange={e => setDelivery(e.target.checked)} /> Delivery disponible
-          </label>
-          <input type="file" accept="image/*" onChange={handleImagen} />
+          <div>
+            <Label htmlFor="nombre" className="mb-1 block">Nombre</Label>
+            <Input id="nombre" required placeholder="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} />
+          </div>
+          <div>
+            <Label htmlFor="descripcion" className="mb-1 block">Descripción</Label>
+            <Textarea id="descripcion" placeholder="Descripción" value={descripcion} onChange={e => setDescripcion(e.target.value)} />
+          </div>
+          <div>
+            <Label htmlFor="precio" className="mb-1 block">Precio</Label>
+            <Input id="precio" required type="number" min="0" step="0.01" placeholder="Precio" value={precio} onChange={e => setPrecio(e.target.value)} />
+          </div>
+          <div>
+            <Label htmlFor="ubicacion" className="mb-1 block">Ubicación</Label>
+            <Input id="ubicacion" placeholder="Ubicación" value={ubicacion} onChange={e => setUbicacion(e.target.value)} />
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox id="delivery" checked={delivery} onCheckedChange={setDelivery} />
+            <Label htmlFor="delivery" className="ml-2">Delivery disponible</Label>
+          </div>
+          <div>
+            <Label htmlFor="imagen" className="mb-1 block">Imagen</Label>
+            <Input id="imagen" type="file" accept="image/*" onChange={handleImagen} />
+          </div>
           {preview && <img src={preview} alt="preview" className="w-20 h-20 object-cover rounded border mx-auto" />}
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <Button type="submit" className="w-full" disabled={loading}>{loading ? "Guardando..." : "Crear opción"}</Button>
