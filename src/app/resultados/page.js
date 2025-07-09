@@ -3,6 +3,7 @@
 import PrivateLayout from "../private-layout";
 import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
 export default function ResultadosPage() {
   const [opciones, setOpciones] = useState([]);
@@ -30,7 +31,24 @@ export default function ResultadosPage() {
             {opciones.map((op) => (
               <li key={op.id} className="flex items-center gap-4 p-4 border rounded-lg bg-card">
                 {op.imagen ? (
-                  <img src={op.imagen} alt={op.nombre} className="w-16 h-16 rounded object-cover border" />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <img
+                        src={op.imagen}
+                        alt={op.nombre}
+                        className="w-16 h-16 rounded object-cover border cursor-pointer transition hover:scale-105"
+                        title="Ver imagen grande"
+                      />
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md flex flex-col items-center">
+                      <img
+                        src={op.imagen}
+                        alt={op.nombre}
+                        className="w-full max-w-xs h-auto rounded object-contain border"
+                        style={{ maxHeight: 400 }}
+                      />
+                    </DialogContent>
+                  </Dialog>
                 ) : (
                   <div className="w-16 h-16 rounded bg-muted flex items-center justify-center text-2xl font-bold">
                     {op.nombre[0].toUpperCase()}
