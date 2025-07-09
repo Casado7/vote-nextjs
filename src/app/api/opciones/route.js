@@ -16,10 +16,18 @@ export async function GET(request) {
       orderBy: { nombre: 'asc' },
     });
     if (conVotos) {
-      // Calcular promedio y total de votos
+      // Calcular promedio, total de votos y desviación estándar
       opciones.forEach(op => {
         op.totalVotos = op.votes.length;
         op.promedio = op.votes.length ? op.votes.reduce((a, v) => a + v.puntuacion, 0) / op.votes.length : 0;
+        // Desviación estándar
+        if (op.votes.length > 0) {
+          const mean = op.promedio;
+          const variance = op.votes.reduce((acc, v) => acc + Math.pow(v.puntuacion - mean, 2), 0) / op.votes.length;
+          op.desviacion = Math.sqrt(variance);
+        } else {
+          op.desviacion = 0;
+        }
         delete op.votes;
       });
     }

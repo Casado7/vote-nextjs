@@ -1,4 +1,3 @@
-
 "use client";
 import PrivateLayout from "../private-layout";
 import { useEffect, useState } from "react";
@@ -98,6 +97,23 @@ export default function ResultadosPage() {
                   <div className="flex items-center gap-2 mt-2">
                     <StarRating value={op.promedio || 0} />
                     <span className="text-sm text-muted-foreground">{op.promedio?.toFixed(2) || 0} / 5</span>
+
+                    {typeof op.desviacion === 'number' && op.totalVotos > 0 && (
+                      <span
+                        className={
+                          'text-base font-semibold ml-3 cursor-help ' +
+                          (op.desviacion > 1.5
+                            ? 'text-red-600'
+                            : op.desviacion > 1
+                              ? 'text-orange-500'
+                              : 'text-green-600')
+                        }
+                        title="Desviación estándar de los votos"
+                        style={{ minWidth: 60, display: 'inline-block' }}
+                      >
+                        σ = {op.desviacion.toFixed(2)}
+                      </span>
+                    )}
                     <span className="text-xs text-muted-foreground ml-2">({op.totalVotos || 0} votos)</span>
                   </div>
                 </div>
