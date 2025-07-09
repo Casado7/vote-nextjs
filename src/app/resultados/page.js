@@ -2,7 +2,7 @@
 "use client";
 import PrivateLayout from "../private-layout";
 import { useEffect, useState } from "react";
-import { Star } from "lucide-react";
+import { Star, DollarSign } from "lucide-react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
 export default function ResultadosPage() {
@@ -29,7 +29,7 @@ export default function ResultadosPage() {
         ) : (
           <ul className="space-y-4">
             {opciones.map((op) => (
-              <li key={op.id} className="flex items-center gap-4 p-4 border rounded-lg bg-card">
+              <li key={op.id} className="relative flex items-center gap-4 p-4 border rounded-lg bg-card">
                 {op.imagen ? (
                   <Dialog>
                     <DialogTrigger asChild>
@@ -54,9 +54,15 @@ export default function ResultadosPage() {
                     {op.nombre[0].toUpperCase()}
                   </div>
                 )}
-                <div className="flex-1">
-                  <div className="font-semibold text-lg">{op.nombre}</div>
-                  <div className="text-sm text-muted-foreground">{op.descripcion}</div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="font-semibold text-lg">{op.nombre}</div>
+                    <span className="flex items-center gap-1 text-green-600 text-sm font-medium">
+                      {Number(op.precio).toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 })}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{op.creador?.nombre || op.creador?.username}</span>
+                  </div>
+                  {op.descripcion && <div className="text-sm text-muted-foreground">{op.descripcion}</div>}
                   {op.url && (
                     <a href={op.url} target="_blank" rel="noopener noreferrer" className="text-primary underline text-sm block mb-1">Ver sitio</a>
                   )}
