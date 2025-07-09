@@ -24,6 +24,9 @@ export async function DELETE(request, { params }) {
     if (!opcion || opcion.creadorId !== userId) {
       return NextResponse.json({ error: 'No autorizado.' }, { status: 403 });
     }
+    // Eliminar votos y comentarios asociados antes de eliminar la opción
+    await prisma.vote.deleteMany({ where: { comidaId: id } });
+    await prisma.comentario.deleteMany({ where: { comidaId: id } });
     await prisma.foodOption.delete({ where: { id } });
     return NextResponse.json({ ok: true });
   } catch (error) {
