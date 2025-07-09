@@ -16,7 +16,7 @@ export const metadata = {
   title: "Votación de Comida",
   description: "App para votar opciones de comida entre usuarios",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon2.ico",
   },
 };
 
