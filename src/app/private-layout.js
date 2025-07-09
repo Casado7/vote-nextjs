@@ -66,6 +66,9 @@ export default function PrivateLayout({ children }) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={() => router.push('/perfil')} className="cursor-pointer">
+                Mi perfil
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                 Cerrar sesión
               </DropdownMenuItem>
