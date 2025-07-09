@@ -3,6 +3,35 @@
 import PrivateLayout from "../private-layout";
 import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
+// Componente para mostrar estrellas con soporte para medias
+function StarRating({ value }) {
+  // value: número entre 0 y 5, puede ser decimal
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    if (value >= i) {
+      // Llena
+      stars.push(
+        <Star key={i} size={20} className="fill-yellow-400 text-yellow-400" />
+      );
+    } else if (value >= i - 0.75) {
+      // Media estrella (relleno parcial)
+      stars.push(
+        <span key={i} className="relative inline-block" style={{ width: 20, height: 20 }}>
+          <Star size={20} className="text-muted-foreground" />
+          <span className="absolute left-0 top-0 overflow-hidden" style={{ width: '50%' }}>
+            <Star size={20} className="fill-yellow-400 text-yellow-400" />
+          </span>
+        </span>
+      );
+    } else {
+      // Vacía
+      stars.push(
+        <Star key={i} size={20} className="text-muted-foreground" />
+      );
+    }
+  }
+  return <span className="flex items-center gap-0.5">{stars}</span>;
+}
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
 export default function ResultadosPage() {
@@ -67,11 +96,7 @@ export default function ResultadosPage() {
                     <a href={op.url} target="_blank" rel="noopener noreferrer" className="text-primary underline text-sm block mb-1">Ver sitio</a>
                   )}
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="flex items-center gap-0.5">
-                      {[1,2,3,4,5].map((n) => (
-                        <Star key={n} size={20} className={n <= Math.round(op.promedio) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"} />
-                      ))}
-                    </span>
+                    <StarRating value={op.promedio || 0} />
                     <span className="text-sm text-muted-foreground">{op.promedio?.toFixed(2) || 0} / 5</span>
                     <span className="text-xs text-muted-foreground ml-2">({op.totalVotos || 0} votos)</span>
                   </div>
