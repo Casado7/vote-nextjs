@@ -18,13 +18,14 @@ export async function POST(request) {
         nombre,
         username,
         passwordHash,
-        rol: 'normal-user',
+        rolId: '00000000-0000-0000-0000-000000000001',
         imagen: imagen || null,
       },
-      select: { id: true, nombre: true, username: true, rol: true, imagen: true },
+      select: { id: true, nombre: true, username: true, rolId: true, imagen: true },
     });
     return NextResponse.json({ user });
   } catch (error) {
-    return NextResponse.json({ error: 'Error al registrar usuario.' }, { status: 500 });
+    console.error('Error al registrar usuario:', error);
+    return NextResponse.json({ error: 'Error al registrar usuario.', detalle: error?.message || error }, { status: 500 });
   }
 }

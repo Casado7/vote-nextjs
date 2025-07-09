@@ -18,11 +18,17 @@ model User {
   nombre       String   @db.VarChar(100)
   username     String   @unique @db.VarChar(50)
   passwordHash String   @map("password_hash") @db.VarChar(255)
-  rol          String   @db.VarChar(20)
+  rolId        String   @db.VarChar(36)
+  rol          Rol      @relation(fields: [rolId], references: [id])
   imagen       String?  @db.Text
   foodOptions  FoodOption[] @relation("FoodOptionCreator")
   votes        Vote[]
   comentarios  Comentario[]
+}
+model Rol {
+  id      String  @id @default(uuid()) @db.VarChar(36)
+  nombre  String  @unique @db.VarChar(50)
+  usuarios User[]
 }
 
 model FoodOption {
