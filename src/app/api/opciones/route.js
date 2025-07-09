@@ -32,7 +32,7 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { nombre, descripcion, precio, delivery, ubicacion, imagen } = body;
+    const { nombre, descripcion, precio, delivery, ubicacion, url, imagen } = body;
     if (!nombre || !precio) {
       return NextResponse.json({ error: 'Nombre y precio son obligatorios.' }, { status: 400 });
     }
@@ -61,6 +61,7 @@ export async function POST(request) {
         precio: parseFloat(precio),
         delivery: !!delivery,
         ubicacion,
+        url,
         imagen,
         creadorId,
       },

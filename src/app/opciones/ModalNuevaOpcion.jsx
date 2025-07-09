@@ -12,6 +12,7 @@ export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) 
   const [precio, setPrecio] = useState("");
   const [delivery, setDelivery] = useState(false);
   const [ubicacion, setUbicacion] = useState("");
+  const [url, setUrl] = useState("");
   const [imagen, setImagen] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) 
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ nombre, descripcion, precio, delivery, ubicacion, imagen }),
+        body: JSON.stringify({ nombre, descripcion, precio, delivery, ubicacion, url, imagen }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al crear opción");
@@ -78,6 +79,10 @@ export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) 
           <div>
             <Label htmlFor="ubicacion" className="mb-1 block">Ubicación</Label>
             <Input id="ubicacion" placeholder="Ubicación" value={ubicacion} onChange={e => setUbicacion(e.target.value)} />
+          </div>
+          <div>
+            <Label htmlFor="url" className="mb-1 block">URL</Label>
+            <Input id="url" placeholder="Enlace o sitio web" value={url} onChange={e => setUrl(e.target.value)} />
           </div>
           <div className="flex items-center gap-2">
             <Checkbox id="delivery" checked={delivery} onCheckedChange={setDelivery} />

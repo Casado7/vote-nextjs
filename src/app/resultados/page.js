@@ -39,6 +39,9 @@ export default function ResultadosPage() {
                 <div className="flex-1">
                   <div className="font-semibold text-lg">{op.nombre}</div>
                   <div className="text-sm text-muted-foreground">{op.descripcion}</div>
+                  {op.url && (
+                    <a href={op.url} target="_blank" rel="noopener noreferrer" className="text-primary underline text-sm block mb-1">Ver sitio</a>
+                  )}
                   <div className="flex items-center gap-2 mt-2">
                     <span className="flex items-center gap-0.5">
                       {[1,2,3,4,5].map((n) => (

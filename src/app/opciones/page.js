@@ -109,6 +109,9 @@ export default function OpcionesPage() {
               <div>
                 <div className="font-semibold text-lg">{op.nombre}</div>
                 {op.descripcion && <div className="text-sm text-muted-foreground">{op.descripcion}</div>}
+                {op.url && (
+                  <a href={op.url} target="_blank" rel="noopener noreferrer" className="text-primary underline text-sm block mb-1">Ver sitio</a>
+                )}
                 <div className="text-sm mt-1">Precio: <span className="font-medium">${op.precio}</span></div>
                 <div className="text-xs text-muted-foreground mt-1">Creador: {op.creador?.nombre || op.creador?.username}</div>
                 <div className="mt-2">
