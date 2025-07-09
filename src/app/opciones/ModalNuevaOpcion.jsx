@@ -32,8 +32,19 @@ export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    // Validaciones de precios
+    const min = parseFloat(minPrice);
+    const max = parseFloat(maxPrice);
+    if (isNaN(min) || isNaN(max) || min <= 0 || max <= 0) {
+      setError("El precio mínimo y máximo deben ser mayores a 0.");
+      return;
+    }
+    if (min >= max) {
+      setError("El precio mínimo debe ser menor que el precio máximo.");
+      return;
+    }
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const res = await fetch("/api/opciones", {
