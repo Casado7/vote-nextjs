@@ -61,6 +61,7 @@ export default function RegisterForm() {
       <Input name="imagen" type="file" accept="image/*" onChange={handleChange} />
       {form.imagen && <img src={form.imagen} alt="preview" className="w-20 h-20 rounded-full mx-auto" />}
       <Button type="submit" className="w-full" disabled={loading}>{loading ? "Registrando..." : "Registrarse"}</Button>
+      <Button type="button" className="w-full" variant="outline" onClick={() => router.push("/")}>Volver al inicio</Button>
       {error && <div className="text-red-500 text-sm text-center">{error}</div>}
       {success && <div className="text-green-600 text-sm text-center">{success}</div>}
     </form>

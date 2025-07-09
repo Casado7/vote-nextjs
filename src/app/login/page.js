@@ -47,6 +47,7 @@ export default function LoginForm() {
       <Input name="username" placeholder="Usuario" value={form.username} onChange={handleChange} required />
       <Input name="password" type="password" placeholder="Contraseña" value={form.password} onChange={handleChange} required />
       <Button type="submit" className="w-full" disabled={loading}>{loading ? "Entrando..." : "Entrar"}</Button>
+      <Button type="button" className="w-full" variant="outline" onClick={() => router.push("/")}>Volver al inicio</Button>
       {error && <div className="text-red-500 text-sm text-center">{error}</div>}
     </form>
   );
