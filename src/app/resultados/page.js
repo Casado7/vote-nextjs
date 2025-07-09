@@ -2,7 +2,7 @@
 "use client";
 import PrivateLayout from "../private-layout";
 import { useEffect, useState } from "react";
-import { Star, DollarSign } from "lucide-react";
+import { Star } from "lucide-react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
 export default function ResultadosPage() {
