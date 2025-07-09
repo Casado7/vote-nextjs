@@ -127,7 +127,13 @@ export default function OpcionesPage() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <div className="font-semibold text-lg">{op.nombre}</div>
                       <span className="flex items-center gap-1 text-green-600 text-sm font-medium">
-                        {Number(op.precio).toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 })}
+                        {Number(op.minPrice).toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 })}
+                        {op.maxPrice && (
+                          <>
+                            <span>-</span>
+                            {Number(op.maxPrice).toLocaleString('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 })}
+                          </>
+                        )}
                       </span>
                       <span className="text-xs text-muted-foreground">{op.creador?.nombre || op.creador?.username}</span>
                     </div>

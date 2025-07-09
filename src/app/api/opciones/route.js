@@ -40,9 +40,9 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { nombre, descripcion, precio, delivery, ubicacion, url, imagen } = body;
-    if (!nombre || !precio) {
-      return NextResponse.json({ error: 'Nombre y precio son obligatorios.' }, { status: 400 });
+    const { nombre, descripcion, minPrice, maxPrice, delivery, ubicacion, url, imagen } = body;
+    if (!nombre || !minPrice || !maxPrice) {
+      return NextResponse.json({ error: 'Nombre, precio mínimo y máximo son obligatorios.' }, { status: 400 });
     }
     // Obtener el usuario autenticado desde el JWT en el header Authorization
     const auth = request.headers.get('authorization');
@@ -66,7 +66,8 @@ export async function POST(request) {
       data: {
         nombre,
         descripcion,
-        precio: parseFloat(precio),
+        minPrice: parseFloat(minPrice),
+        maxPrice: parseFloat(maxPrice),
         delivery: !!delivery,
         ubicacion,
         url,

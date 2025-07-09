@@ -9,7 +9,8 @@ import { useState } from "react";
 export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) {
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [precio, setPrecio] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const [delivery, setDelivery] = useState(false);
   const [ubicacion, setUbicacion] = useState("");
   const [url, setUrl] = useState("");
@@ -41,13 +42,13 @@ export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) 
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ nombre, descripcion, precio, delivery, ubicacion, url, imagen }),
+        body: JSON.stringify({ nombre, descripcion, minPrice, maxPrice, delivery, ubicacion, url, imagen }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al crear opción");
       onCreated(data.opcion);
       onClose();
-      setNombre(""); setDescripcion(""); setPrecio(""); setDelivery(false); setUbicacion(""); setImagen(null); setPreview(null);
+      setNombre(""); setDescripcion(""); setMinPrice(""); setMaxPrice(""); setDelivery(false); setUbicacion(""); setImagen(null); setPreview(null);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -72,9 +73,15 @@ export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) 
             <Label htmlFor="descripcion" className="mb-1 block">Descripción</Label>
             <Textarea id="descripcion" placeholder="Descripción" value={descripcion} onChange={e => setDescripcion(e.target.value)} />
           </div>
-          <div>
-            <Label htmlFor="precio" className="mb-1 block">Precio</Label>
-            <Input id="precio" required type="number" min="0" step="0.01" placeholder="Precio" value={precio} onChange={e => setPrecio(e.target.value)} />
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Label htmlFor="minPrice" className="mb-1 block">Precio mínimo</Label>
+              <Input id="minPrice" required type="number" min="0" step="0.01" placeholder="Precio mínimo" value={minPrice} onChange={e => setMinPrice(e.target.value)} />
+            </div>
+            <div className="flex-1">
+              <Label htmlFor="maxPrice" className="mb-1 block">Precio máximo</Label>
+              <Input id="maxPrice" required type="number" min="0" step="0.01" placeholder="Precio máximo" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
+            </div>
           </div>
           <div>
             <Label htmlFor="ubicacion" className="mb-1 block">Ubicación</Label>
