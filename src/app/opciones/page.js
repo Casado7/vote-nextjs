@@ -113,8 +113,8 @@ export default function OpcionesPage() {
                         <img
                           src={op.imagen}
                           alt={op.nombre}
-                          className="w-full max-w-xs h-auto rounded object-contain border"
-                          style={{ maxHeight: 400 }}
+                          className="w-full max-w-[90vw] sm:max-w-[500px] h-auto rounded object-contain border"
+                          style={{ maxHeight: '80vh' }}
                         />
                       </DialogContent>
                     </Dialog>
