@@ -41,7 +41,9 @@ export default function ResultadosPage() {
     fetch("/api/opciones?conVotos=1")
       .then((res) => res.json())
       .then((data) => {
-        setOpciones(data.opciones || []);
+        // Ordenar por promedio descendente
+        const ordenadas = (data.opciones || []).slice().sort((a, b) => (b.promedio || 0) - (a.promedio || 0));
+        setOpciones(ordenadas);
         setLoading(false);
       });
   }, []);
