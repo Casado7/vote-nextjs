@@ -44,6 +44,15 @@ export default function ModalNuevaOpcion({ open, onClose, onCreated, trigger }) 
       setError("El precio mínimo debe ser menor que el precio máximo.");
       return;
     }
+    // Validación de URL si se ingresó
+    if (url && url.trim() !== "") {
+      try {
+        new URL(url);
+      } catch {
+        setError("El URL ingresado no es válido.");
+        return;
+      }
+    }
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
