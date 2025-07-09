@@ -36,6 +36,7 @@ model FoodOption {
   nombre      String   @db.VarChar(100)
   descripcion String?  @db.Text
   precio      Decimal  @db.Decimal(10,2)
+  maxPrice    Decimal  @db.Decimal(10,2)
   delivery    Boolean
   ubicacion   String   @db.VarChar(200)
   url         String?  @db.VarChar(300)
