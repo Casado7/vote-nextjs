@@ -1,4 +1,5 @@
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Estrellas from "./Estrellas";
 import { Star, MapPin, Bike } from "lucide-react";
@@ -34,6 +35,27 @@ export default function OpcionCard({
   deleteId,
   setDeleteId
 }) {
+  const [openDetalles, setOpenDetalles] = useState(false);
+  const [votosDetalles, setVotosDetalles] = useState([]);
+  const [loadingVotos, setLoadingVotos] = useState(false);
+  const [errorVotos, setErrorVotos] = useState(null);
+
+  useEffect(() => {
+    if (openDetalles) {
+      setLoadingVotos(true);
+      setErrorVotos(null);
+      fetch(`/api/opciones/${op.id}/votos`)
+        .then(res => res.ok ? res.json() : Promise.reject(res))
+        .then(data => {
+          setVotosDetalles(data.votos || []);
+          setLoadingVotos(false);
+        })
+        .catch(() => {
+          setErrorVotos('Error al cargar los votos');
+          setLoadingVotos(false);
+        });
+    }
+  }, [openDetalles, op.id]);
   return (
     <li className="relative flex items-center gap-4 p-4 border rounded-lg bg-card">
       {user?.id === op.creador?.id && onDelete && (
@@ -123,9 +145,9 @@ export default function OpcionCard({
             )}
           </div>
         )}
-        <div className={showResultados ? "mt-2 flex items-center gap-2 flex-wrap" : "mt-2"}>
+        <div className={showResultados ? "mt-2 flex items-center gap-2 flex-wrap bg-transparent" : "mt-2 bg-transparent"}>
           {showResultados ? (
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap w-full">
               <StarRating value={op.promedio || 0} />
               <span className="text-sm text-muted-foreground">{op.promedio?.toFixed(2) || 0} / 5</span>
               {typeof op.desviacion === 'number' && op.totalVotos > 0 && (
@@ -145,6 +167,42 @@ export default function OpcionCard({
                 </span>
               )}
               <span className="text-xs text-muted-foreground ml-2">({op.totalVotos || 0} votos)</span>
+              <Dialog open={openDetalles} onOpenChange={setOpenDetalles}>
+                <DialogTrigger asChild>
+                  <button
+                    className="ml-2 px-2 py-1 rounded bg-transparent border border-primary text-primary text-xs hover:bg-primary/10 transition"
+                    type="button"
+                  >
+                    Ver detalles
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Votos por usuario</DialogTitle>
+                    <DialogDescription>
+                      Lista de usuarios y sus votos para <span className="font-semibold">{op.nombre}</span>
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="mt-4">
+                    {loadingVotos ? (
+                      <div className="text-sm text-muted-foreground">Cargando votos...</div>
+                    ) : errorVotos ? (
+                      <div className="text-sm text-destructive">{errorVotos}</div>
+                    ) : votosDetalles.length > 0 ? (
+                      <ul className="divide-y divide-border">
+                        {votosDetalles.map((v) => (
+                          <li key={v.usuario?.id || v.usuarioId} className="flex items-center justify-between py-2">
+                            <span className="text-sm font-medium text-foreground">{v.usuario?.nombre || v.usuario?.username || 'Usuario'}</span>
+                            <span className="text-sm font-mono text-primary">{v.puntuacion || v.valor} / 5</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="text-sm text-muted-foreground">No hay votos registrados para esta opción.</div>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           ) : (
             <Estrellas
