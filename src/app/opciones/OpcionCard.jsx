@@ -1,7 +1,7 @@
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Estrellas from "./Estrellas";
-import { Star, MapPin } from "lucide-react";
+import { Star, MapPin, Bike } from "lucide-react";
 
 function StarRating({ value }) {
   const stars = [];
@@ -95,13 +95,21 @@ export default function OpcionCard({
           <span className="text-xs text-muted-foreground">{op.creador?.nombre || op.creador?.username}</span>
         </div>
         {op.descripcion && <div className="text-sm text-muted-foreground">{op.descripcion}</div>}
-        {/* Ubicación y URL en la misma línea si existen */}
-        {(op.ubicacion || op.url) && (
+        {/* Ubicación, delivery y URL en la misma línea si existen */}
+        {(op.ubicacion || typeof op.delivery === 'boolean' || op.url) && (
           <div className="flex items-center gap-2 mb-1">
             {op.ubicacion && (
               <span className="flex items-center text-sm text-muted-foreground">
                 <MapPin size={16} className="mr-1 text-primary" />
                 {op.ubicacion}
+              </span>
+            )}
+            {typeof op.delivery === 'boolean' && (
+              <span className="relative flex items-center group cursor-pointer">
+                <Bike size={18} className={op.delivery ? 'text-green-600' : 'text-red-600'} />
+                <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1 z-10 whitespace-nowrap rounded bg-card border px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200">
+                  {op.delivery ? 'Tiene delivery' : 'Sin delivery'}
+                </span>
               </span>
             )}
             {op.url && (
