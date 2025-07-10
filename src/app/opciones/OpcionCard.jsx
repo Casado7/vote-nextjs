@@ -99,10 +99,16 @@ export default function OpcionCard({
         {(op.ubicacion || typeof op.delivery === 'boolean' || op.url) && (
           <div className="flex items-center gap-2 mb-1">
             {op.ubicacion && (
-              <span className="flex items-center text-sm text-muted-foreground">
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(op.nombre + ' ' + op.ubicacion)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-sm text-muted-foreground underline hover:text-primary"
+                title="Ver en Google Maps"
+              >
                 <MapPin size={16} className="mr-1 text-primary" />
                 {op.ubicacion}
-              </span>
+              </a>
             )}
             {typeof op.delivery === 'boolean' && (
               <span className="relative flex items-center group cursor-pointer">
