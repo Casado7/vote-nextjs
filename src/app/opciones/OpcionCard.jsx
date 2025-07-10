@@ -193,7 +193,10 @@ export default function OpcionCard({
                         {votosDetalles.map((v) => (
                           <li key={v.usuario?.id || v.usuarioId} className="flex items-center justify-between py-2">
                             <span className="text-sm font-medium text-foreground">{v.usuario?.nombre || v.usuario?.username || 'Usuario'}</span>
-                            <span className="text-sm font-mono text-primary">{v.puntuacion || v.valor} / 5</span>
+                            <span className="flex items-center gap-2">
+                              <StarRating value={v.puntuacion || v.valor} />
+                              <span className="text-sm font-mono text-primary">{v.puntuacion || v.valor} / 5</span>
+                            </span>
                           </li>
                         ))}
                       </ul>
