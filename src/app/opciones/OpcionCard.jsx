@@ -1,7 +1,7 @@
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Estrellas from "./Estrellas";
-import { Star } from "lucide-react";
+import { Star, MapPin } from "lucide-react";
 
 function StarRating({ value }) {
   const stars = [];
@@ -95,8 +95,19 @@ export default function OpcionCard({
           <span className="text-xs text-muted-foreground">{op.creador?.nombre || op.creador?.username}</span>
         </div>
         {op.descripcion && <div className="text-sm text-muted-foreground">{op.descripcion}</div>}
-        {op.url && (
-          <a href={op.url} target="_blank" rel="noopener noreferrer" className="text-primary underline text-sm block mb-1">Ver sitio</a>
+        {/* Ubicación y URL en la misma línea si existen */}
+        {(op.ubicacion || op.url) && (
+          <div className="flex items-center gap-2 mb-1">
+            {op.ubicacion && (
+              <span className="flex items-center text-sm text-muted-foreground">
+                <MapPin size={16} className="mr-1 text-primary" />
+                {op.ubicacion}
+              </span>
+            )}
+            {op.url && (
+              <a href={op.url} target="_blank" rel="noopener noreferrer" className="text-primary underline text-sm">Ver sitio</a>
+            )}
+          </div>
         )}
         <div className={showResultados ? "mt-2 flex items-center gap-2 flex-wrap" : "mt-2"}>
           {showResultados ? (
