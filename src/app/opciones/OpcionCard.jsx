@@ -173,7 +173,7 @@ export default function OpcionCard({
                     className="ml-2 px-2 py-1 rounded bg-transparent border border-primary text-primary text-xs hover:bg-primary/10 transition"
                     type="button"
                   >
-                    Ver detalles
+                    Ver Votos
                   </button>
                 </DialogTrigger>
                 <DialogContent className="max-w-md">
